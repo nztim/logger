@@ -1,0 +1,17 @@
+{
+    "name": "nztim/logger",
+    "description": "Logging package for Laravel 5",
+    "require": {
+        "laravel/framework": "^5.0",
+        "monolog/monolog": "^1.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.6"
+    },
+    "authors": [
+        {
+            "name": "Tim",
+            "email": "tim@nztim.com"
+        }
+    ]
+}
