@@ -84,7 +84,9 @@ class Logger
         $info['ip'] = $this->request->getClientIp();
         $info['method'] = $this->request->server('REQUEST_METHOD');
         $info['url'] = $this->request->url();
-        $info['user'] = Auth::user();
+        if(Auth::check()) {
+            $info['userid'] = Auth::user()->id;
+        }
         $input = $this->request->all();
         if(isset($input['password'])) {
             unset($input['password']);
