@@ -17,9 +17,15 @@ Add facade reference:
 Use the facade to write to custom log files. Files are stored in `storage/logs/custom`:
 
 ```
-Logger::info('auth', 'User x logged in from IP: 1.2.3.4');
+Logger::info('auth', 'User login from 1.2.3.4');
 Logger::warning('audit', 'A record was updated');
 Logger::error('exceptions', 'Fatal exception: ');  
+```
+
+A `requestInfo()` method is available to provide context for the message, including IP address, request type/URL, `Auth::user()->id` and input data
+
+```
+Logger::warning('audit', 'An unusual request', Logger::requestInfo());
 ```
 
 Fatal errors caused by the logging process are stored in `storage/logs/fatal-logger-errors.log`
