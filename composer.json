@@ -1,6 +1,7 @@
 {
     "name": "nztim/logger",
     "description": "Logging package for Laravel 5",
+    "license": "MIT",
     "require": {
         "laravel/framework": "^5.0",
         "monolog/monolog": "^1.13"
