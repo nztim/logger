@@ -14,7 +14,7 @@ Add facade reference:
 
 ###Usage
 
-Use the facade to write to custom log channels. Log files are stored in `storage/logs/custom`:
+Use the facade to write to custom log files. Files are stored in `storage/logs/custom`:
 
 ```
 Logger::info('auth', 'User x logged in from IP: 1.2.3.4');
@@ -55,12 +55,12 @@ External services are only triggered if debug is false and the relevant error le
 
 **Email alerts**
 
-The Laravel mail system must be configured for emails to function
+The Laravel mail system must be configured for emails to function.   
+The 'from' address must be st in `config/mail.php`.
 ```
 LOGGER_APP_NAME=MyApp
 LOGGER_EMAIL_LEVEL=WARNING
 LOGGER_EMAIL_TO=recipient@domain.com
-# 'from' address must be set via config/mail.php
 ```
 
 **Papertrail**
