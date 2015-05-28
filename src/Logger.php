@@ -78,7 +78,7 @@ class Logger
         file_put_contents($filename, $message, FILE_APPEND);
     }
 
-    public function requestInfo() 
+    public function requestInfo()
     {
         $info = [];
         $info['ip'] = $this->request->getClientIp();
@@ -88,11 +88,11 @@ class Logger
             $info['userid'] = Auth::user()->id;
         }
         $input = $this->request->all();
-        if(isset($input['password'])) {
-            unset($input['password']);
-        }
-        if(isset($input['password_confirmation'])) {
-            unset($input['password_confirmation']);
+        $remove = ['password', 'password_confirmation', '_token'];
+        foreach ($remove as $item) {
+            if (isset($input[$item])) {
+                unset($input[$item]);
+            }
         }
         $info['input'] = $input;
         return $info;
