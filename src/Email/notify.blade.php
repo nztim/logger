@@ -245,6 +245,7 @@
                             @if(!empty($entry->getContext()))
                                 <p>{{ var_export($entry->getContext(), true) }}</p>
                             @endif
+                            <p>Note: <strong>error emails are throttled</strong> - please check the logs</p>
                         </td>
                     </tr>
                 </table>
