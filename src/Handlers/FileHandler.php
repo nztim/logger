@@ -25,7 +25,7 @@ class FileHandler implements Handler
     {
         $ds = DIRECTORY_SEPARATOR;
         $path = storage_path() . "{$ds}logs{$ds}custom";
-        if (!file_exists($path)) {
+        if (!is_dir($path) && !file_exists($path)) {
             mkdir($path, 0755);
         }
         return "{$path}{$ds}{$channel}.log";
