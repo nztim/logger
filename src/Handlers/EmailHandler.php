@@ -11,14 +11,14 @@ class EmailHandler implements Handler
 {
     protected $mailer;
     protected $cache;
-    protected $debug;
+    protected $config;
 
     public function __construct(Mailer $mailer, Cache $cache, Repository $config)
     {
         $this->mailer = $mailer;
         /** @var Cache $cache */
         $this->cache = $cache;
-        $this->debug = $config->get('debug');
+        $this->config = $config;
     }
 
     /**
@@ -45,7 +45,7 @@ class EmailHandler implements Handler
     protected function isTriggered(Entry $entry)
     {
         $emailLevel = env('LOGGER_EMAIL_LEVEL', false);
-        if(!$emailLevel || $this->debug) {
+        if(!$emailLevel || $this->config->get('debug')) {
             return false;
         }
         $emailLevelCode = MonologLogger::getLevels()[$emailLevel];

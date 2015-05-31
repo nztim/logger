@@ -8,11 +8,11 @@ use Monolog\Handler\SyslogUdpHandler;
 
 class PapertrailHandler implements Handler
 {
-    protected $debug;
+    protected $config;
 
     public function __construct(Repository $config)
     {
-        $this->debug = $config->get('debug');
+        $this->config = $config;
     }
 
     public function write(Entry $entry)
@@ -33,7 +33,7 @@ class PapertrailHandler implements Handler
     protected function isTriggered(Entry $entry)
     {
         $papertrailLevel = env('LOGGER_PAPERTRAIL_LEVEL', false);
-        if (!$papertrailLevel || $this->debug) {
+        if (!$papertrailLevel || $this->config->get('debug')) {
             return false;
         }
         $papertrailLevelCode = MonologLogger::getLevels()[$papertrailLevel];
