@@ -1,9 +1,10 @@
 <?php namespace NZTim\Logger;
 
-use App;
 use Illuminate\Support\ServiceProvider;
 use Log;
 use Logger;
+use NZTim\Logger\Handlers\EmailHandler;
+use NZTim\Logger\Handlers\PapertrailHandler;
 
 class LoggerServiceProvider extends ServiceProvider {
 
@@ -22,8 +23,18 @@ class LoggerServiceProvider extends ServiceProvider {
 
     public function register()
     {
-        App::bind('logger', function() {
-            return new \NZTim\Logger\Logger;
+        $this->app->bind('NZTim\Logger\Handlers\EmailHandler', function() {
+            $mailer = $this->app->make('Illuminate\Mail\Mailer');
+            $cache = $this->app->make('Illuminate\Cache\CacheManager');
+            $config = $this->app->make('Illuminate\Config\Repository');
+            return new EmailHandler($mailer, $cache, $config);
+        });
+        $this->app->bind('NZTim\Logger\Handlers\PapertrailHandler', function() {
+            $config = $this->app->make('Illuminate\Config\Repository');
+            return new PapertrailHandler($config);
+        });
+        $this->app->bind('logger', function() {
+            return $this->app->make('NZTim\Logger\Logger');
         });
     }
 }

@@ -1,6 +1,5 @@
 <?php namespace NZTim\Logger;
 
-use Config;
 use InvalidArgumentException;
 use Monolog\Logger as MonologLogger;
 
@@ -15,7 +14,13 @@ class Entry
     public function __construct($channel, $level, $message, $context = [])
     {
         $this->channel = substr(str_slug($channel), 0, 10);
+        if(strlen($this->channel) == 0) {
+            throw new InvalidArgumentException('Channel name must be set');
+        }
         $this->level = strtoupper($level);
+        if(!isset(MonologLogger::getLevels()[$this->level])) {
+            throw new InvalidArgumentException('Level must be a standard Monolog level');
+        }
         $this->code = MonologLogger::getLevels()[$this->level];
         if(empty($message)) {
             throw new InvalidArgumentException('Log entry must contain a message');
@@ -47,21 +52,5 @@ class Entry
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * @param string|boolean $triggerLevel
-     * @return boolean
-     */
-    public function isTriggered($triggerLevel)
-    {
-        if(Config::get('app.debug') || $triggerLevel == false) {
-            return false;
-        }
-        if(!isset(MonologLogger::getLevels()[$triggerLevel])) {
-            throw new InvalidArgumentException('Invalid trigger level supplied to Entry::isTriggered()');
-        }
-        $triggerCode = MonologLogger::getLevels()[$triggerLevel];
-        return $this->code >= $triggerCode;
     }
 }

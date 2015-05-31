@@ -2,19 +2,23 @@
 
 use NZTim\Logger\Entry;
 use InvalidArgumentException;
+use Illuminate\Config\Repository;
 use Illuminate\Mail\Mailer;
 use Illuminate\Cache\CacheManager as Cache;
+use Monolog\Logger as MonologLogger;
 
 class EmailHandler implements Handler
 {
     protected $mailer;
     protected $cache;
+    protected $debug;
 
-    public function __construct(Mailer $mailer, Cache $cache)
+    public function __construct(Mailer $mailer, Cache $cache, Repository $config)
     {
         $this->mailer = $mailer;
         /** @var Cache $cache */
         $this->cache = $cache;
+        $this->debug = $config->get('debug');
     }
 
     /**
@@ -23,7 +27,7 @@ class EmailHandler implements Handler
      */
     public function write(Entry $entry)
     {
-        if($this->cache->has('logger-email') || !$entry->isTriggered(env('LOGGER_EMAIL_LEVEL', false))) {
+        if ($this->cache->has('logger-email') || !$this->isTriggered($entry)) {
             return;
         }
         $recipient = env('LOGGER_EMAIL_TO', false);
@@ -36,5 +40,15 @@ class EmailHandler implements Handler
                 ->subject('Log notification from ' . env('LOGGER_APP_NAME', 'Laravel'));
         });
         $this->cache->put('logger-email', true, 10);
+    }
+
+    protected function isTriggered(Entry $entry)
+    {
+        $emailLevel = env('LOGGER_EMAIL_LEVEL', false);
+        if(!$emailLevel || $this->debug) {
+            return false;
+        }
+        $emailLevelCode = MonologLogger::getLevels()[$emailLevel];
+        return $entry->getCode() >= $emailLevelCode;
     }
 }

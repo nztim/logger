@@ -78,6 +78,7 @@ LOGGER_PAPERTRAIL_LEVEL=DEBUG
 LOGGER_PAPERTRAIL_HOST=<xyz>.papertrailapp.com
 LOGGER_PAPERTRAIL_PORT=12345
 ```
+This communication method may be blocked by default on shared hosting, test it when turning it on.
 
 ### Summary of .env entries:
 ```

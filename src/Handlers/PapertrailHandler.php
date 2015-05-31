@@ -1,5 +1,6 @@
 <?php namespace NZTim\Logger\Handlers;
 
+use Illuminate\Config\Repository;
 use NZTim\Logger\Entry;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger as MonologLogger;
@@ -7,14 +8,16 @@ use Monolog\Handler\SyslogUdpHandler;
 
 class PapertrailHandler implements Handler
 {
+    protected $debug;
 
-    /**
-     * @param Entry $entry
-     * @return null
-     */
+    public function __construct(Repository $config)
+    {
+        $this->debug = $config->get('debug');
+    }
+
     public function write(Entry $entry)
     {
-        if(!$entry->isTriggered(env('LOGGER_PAPERTRAIL_LEVEL', false))) {
+        if (!$this->isTriggered($entry)) {
             return;
         }
         $output = "%channel%.%level_name%: %message%";
@@ -25,5 +28,15 @@ class PapertrailHandler implements Handler
         $syslogHandler->setFormatter($formatter);
         $log->pushHandler($syslogHandler);
         $log->addRecord($entry->getCode(), $entry->getMessage(), $entry->getContext());
+    }
+
+    protected function isTriggered(Entry $entry)
+    {
+        $papertrailLevel = env('LOGGER_PAPERTRAIL_LEVEL', false);
+        if (!$papertrailLevel || $this->debug) {
+            return false;
+        }
+        $papertrailLevelCode = MonologLogger::getLevels()[$papertrailLevel];
+        return $entry->getCode() >= $papertrailLevelCode;
     }
 }

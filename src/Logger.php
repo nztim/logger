@@ -1,21 +1,31 @@
 <?php namespace NZTim\Logger;
 
 use App;
-use Auth;
-use NZTim\Logger\Handlers\Handler;
 use Exception;
+use Illuminate\Foundation\Application;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Http\Request;
+use NZTim\Logger\Handlers\Handler;
 
 class Logger
 {
-    protected $handlers = [];
+    protected $handlers = [
+        'NZTim\Logger\Handlers\FileHandler',
+        'NZTim\Logger\Handlers\EmailHandler',
+        'NZTim\Logger\Handlers\PapertrailHandler',
+    ];
+    protected $app;
     protected $request;
+    protected $authManager;
 
-    public function __construct()
+    public function __construct(
+        Application $app,
+        Request $request,
+        AuthManager $authManager)
     {
-        $this->handlers[] = App::make('NZTim\Logger\Handlers\FileHandler');
-        $this->handlers[] = App::make('NZTim\Logger\Handlers\EmailHandler');
-        $this->handlers[] = App::make('NZTim\Logger\Handlers\PapertrailHandler');
-        $this->request = App::make('Illuminate\Http\Request');
+        $this->app = $app;
+        $this->request = $request;
+        $this->authManager = $authManager;
     }
 
     /**
@@ -57,7 +67,8 @@ class Logger
     public function add($channel, $level, $message, $context = [])
     {
         $entry = new Entry($channel, $level, $message, $context);
-        foreach ($this->handlers as $handler) {
+        foreach ($this->handlers as $handlerName) {
+            $handler = $this->app->make($handlerName);
             try {
                 /** @var Handler $handler */
                 $handler->write($entry);
@@ -84,8 +95,8 @@ class Logger
         $info['ip'] = $this->request->getClientIp();
         $info['method'] = $this->request->server('REQUEST_METHOD');
         $info['url'] = $this->request->url();
-        if(Auth::check()) {
-            $info['userid'] = Auth::user()->id;
+        if($this->authManager->check()) {
+            $info['userid'] = $this->authManager->user()->id;
         }
         $input = $this->request->all();
         $remove = ['password', 'password_confirmation', '_token'];
