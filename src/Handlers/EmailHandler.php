@@ -45,7 +45,7 @@ class EmailHandler implements Handler
     protected function isTriggered(Entry $entry)
     {
         $emailLevel = env('LOGGER_EMAIL_LEVEL', false);
-        if(!$emailLevel || $this->config->get('debug')) {
+        if(!$emailLevel || $this->config->get('app.debug')) {
             return false;
         }
         $emailLevelCode = MonologLogger::getLevels()[$emailLevel];

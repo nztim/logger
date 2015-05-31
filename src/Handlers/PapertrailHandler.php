@@ -33,7 +33,7 @@ class PapertrailHandler implements Handler
     protected function isTriggered(Entry $entry)
     {
         $papertrailLevel = env('LOGGER_PAPERTRAIL_LEVEL', false);
-        if (!$papertrailLevel || $this->config->get('debug')) {
+        if (!$papertrailLevel || $this->config->get('app.debug')) {
             return false;
         }
         $papertrailLevelCode = MonologLogger::getLevels()[$papertrailLevel];
