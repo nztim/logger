@@ -50,7 +50,7 @@ use Logger;
 public function report(Exception $e)
 {
     $class = (new \ReflectionClass($e))->getShortName();
-    Logger::error('exceptions', "Exception {$class} | {$e->getMessage()}");
+    Logger::error('exceptions', "Exception {$class} | {$e->getMessage()}", Logger::requestInfo());
     return parent::report($e);
 }
 ```
