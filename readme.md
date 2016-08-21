@@ -62,10 +62,10 @@ External services are only triggered if debug is false and the relevant error le
 **Email alerts**
 
 The Laravel mail system must be configured for emails to function.   
-The 'from' address must be st in `config/mail.php`.
+The 'from' address must be set in `config/mail.php`.
 ```
 LOGGER_APP_NAME=MyApp
-LOGGER_EMAIL_LEVEL=WARNING
+LOGGER_EMAIL_LEVEL=ERROR
 LOGGER_EMAIL_TO=recipient@domain.com
 ```
 
