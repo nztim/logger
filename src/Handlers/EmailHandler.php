@@ -1,5 +1,6 @@
 <?php namespace NZTim\Logger\Handlers;
 
+use Illuminate\Mail\Message;
 use NZTim\Logger\Entry;
 use InvalidArgumentException;
 use Illuminate\Config\Repository;
@@ -16,36 +17,29 @@ class EmailHandler implements Handler
     public function __construct(Mailer $mailer, Cache $cache, Repository $config)
     {
         $this->mailer = $mailer;
-        /** @var Cache $cache */
-        $this->cache = $cache;
+        $this->cache = $cache; /** @var Cache $cache */
         $this->config = $config;
     }
 
-    /**
-     * @param Entry $entry
-     * @return null
-     */
     public function write(Entry $entry)
     {
         if ($this->cache->has('logger-email') || !$this->isTriggered($entry)) {
             return;
         }
-        $recipient = env('LOGGER_EMAIL_TO', false);
-        if(!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+        $recipient = config('logger.email.recipient', false);
+        if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('No email recipient supplied');
         }
-        $this->mailer->send('logger::notify', compact('entry'), function($message) use ($recipient)
-        {
-            $message->to($recipient)
-                ->subject('Log notification from ' . env('LOGGER_APP_NAME', 'Laravel'));
+        $this->mailer->send('logger::notify', ['entry' => $entry], function (Message $message) use ($recipient) {
+            $message->to($recipient)->subject('Log notification from ' . config('logger.email.name'));
         });
         $this->cache->put('logger-email', true, 10);
     }
 
     protected function isTriggered(Entry $entry)
     {
-        $emailLevel = env('LOGGER_EMAIL_LEVEL', false);
-        if(!$emailLevel || $this->config->get('app.debug')) {
+        $emailLevel = config('logger.email.level', false);
+        if (!$emailLevel || $this->config->get('app.debug')) {
             return false;
         }
         $emailLevelCode = MonologLogger::getLevels()[$emailLevel];

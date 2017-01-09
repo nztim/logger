@@ -5,21 +5,21 @@ use Illuminate\Config\Repository;
 use Illuminate\Mail\Mailer;
 use Illuminate\Support\ServiceProvider;
 use Log;
-use Logger;
 use NZTim\Logger\Handlers\EmailHandler;
 
 class LoggerServiceProvider extends ServiceProvider
 {
-
     protected $defer = false;
 
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/Email', 'logger');
-        if(env('LOGGER_LOG', false)) {
-            Log::listen(function($level, $message, $context)
-            {
-                Logger::add('laravel', $level, $message, $context);
+        $this->loadViewsFrom(__DIR__ . '/email', 'logger');
+        $this->publishes([
+            __DIR__.'/config/logger.php' => config_path('logger.php'),
+        ]);
+        if (config('logger.laravel', false)) {
+            Log::listen(function ($level, $message, $context) {
+                LoggerFacade::add('laravel', $level, $message, $context);
             });
         }
     }
@@ -33,7 +33,10 @@ class LoggerServiceProvider extends ServiceProvider
             return new EmailHandler($mailer, $cache, $config);
         });
         $this->app->bind('logger', function () {
-            return $this->app->make(\NZTim\Logger\Logger::class);
+            return $this->app->make(Logger::class);
         });
+        $this->mergeConfigFrom(
+            __DIR__.'/config/logger.php', 'logger'
+        );
     }
 }

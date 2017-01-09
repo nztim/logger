@@ -7,10 +7,10 @@ Additionally, it can capture messages sent via the Laravel Log facade and except
 ###Installation
 
 Register the service provider:  
-`'NZTim\Logger\LoggerServiceProvider',`
+`NZTim\Logger\LoggerServiceProvider::class,`
 
 Add facade reference:  
-`'Logger' => 'NZTim\Logger\LoggerFacade',`
+`'Logger' => NZTim\Logger\LoggerFacade::class,`
 
 ###Usage
 
@@ -28,20 +28,21 @@ A `requestInfo()` method is available to provide context for the message, includ
 Logger::warning('audit', 'An unusual request', Logger::requestInfo());
 ```
 
-Fatal errors caused by the logging process are stored in `storage/logs/fatal-logger-errors.log`
+Fatal errors occurring during the logging process, are stored in `storage/logs/fatal-logger-errors.log`.
+For example, a message will be logged here when the system is unable to send an error notification.
 
 ### Configuration
 
-Configuration is via the .env file, no entries are required for base functionality.
+Publish the configuration file with: `php artisan vendor:publish --provider=NZTim\Logger\LoggerServiceProvider`.
 
-**Hook into Laravel Log facade messages:**  
+* `'laravel' => true,` captures Laravel log facade messages
+* `'email.level' => 'ERROR'` sets the level at which email notifications are sent
+* `'email.recipient' => 'recipient@example.com',` sets the email recipient
 
-```
-// .env
-LOGGER_LOG=true
-```
 
-**Hook into Laravel exception messages:**    
+### Hook into Laravel exceptions:
+
+Make sure the `logger.laravel` configuration option is set to true, and update your error handler:
 
 ```
 // app/Exceptions/Handler.php
@@ -55,28 +56,12 @@ public function report(Exception $e)
 }
 ```
 
-###External Services
+### Email alerts
 
-External services are only triggered if debug is false and the relevant error level meets the requirement.  
-
-**Email alerts**
-
+Emails are only triggered if `app.debug` is false and the relevant error level meets the requirement. 
 The Laravel mail system must be configured for emails to function.   
-The 'from' address must be set in `config/mail.php`.
-```
-LOGGER_APP_NAME=MyApp
-LOGGER_EMAIL_LEVEL=ERROR
-LOGGER_EMAIL_TO=recipient@domain.com
-```
 
-### Summary of .env entries:
-```
-LOGGER_LOG=true
-LOGGER_APP_NAME=MyAppName
-LOGGER_EMAIL_LEVEL=ERROR
-LOGGER_EMAIL_TO=recipient@domain.com
-```
 ### Changelog
 
-* v0.3: Remove Papertrail handler
-  * Upgrade: make sure Papertrail handler is not used
+* v0.4: Remove Papertrail handler, use config file instead of .env, require PHP7.
+  * Upgrade: publish and update the config file, make sure Papertrail handler is not required.

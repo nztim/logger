@@ -6,10 +6,6 @@ use Monolog\Handler\StreamHandler;
 
 class FileHandler implements Handler
 {
-    /**
-     * @param Entry $entry
-     * @return null
-     */
     public function write(Entry $entry)
     {
         $log = new MonologLogger($entry->getChannel());
@@ -17,11 +13,7 @@ class FileHandler implements Handler
         $log->addRecord($entry->getCode(), $entry->getMessage(), $entry->getContext());
     }
 
-    /**
-     * @param string $channel
-     * @return string
-     */
-    protected function getPath($channel)
+    protected function getPath(string $channel): string
     {
         $ds = DIRECTORY_SEPARATOR;
         $path = storage_path() . "{$ds}logs{$ds}custom";
