@@ -12,7 +12,6 @@ class LoggerTest extends PHPUnit_Framework_TestCase
     protected $config;
     protected $fileHandler;
     protected $emailHandler;
-    protected $papertrailHandler;
 
     /**
      * @test
@@ -41,7 +40,6 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             $logger = $this->instantiateWithMocks();
             $this->fileHandler->shouldReceive('write')->once();
             $this->emailHandler->shouldReceive('write')->once();
-            $this->papertrailHandler->shouldReceive('write')->once();
             $logger->$helper('test', 'Test message');
         }
     }
@@ -51,7 +49,6 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         $logger = $this->instantiateWithMocks();
         $this->fileHandler->shouldReceive('write')->once();
         $this->emailHandler->shouldReceive('write')->once();
-        $this->papertrailHandler->shouldReceive('write')->andThrow(new Exception);
         $logger->add('test', 'ERROR', 'Test message', ['abc' => 123]);
     }
 
@@ -68,11 +65,9 @@ class LoggerTest extends PHPUnit_Framework_TestCase
     {
         $this->fileHandler = Mockery::mock('NZTim\Logger\Handlers\Handler');
         $this->emailHandler = Mockery::mock('NZTim\Logger\Handlers\Handler');
-        $this->papertrailHandler = Mockery::mock('NZTim\Logger\Handlers\Handler');
         $this->app = Mockery::mock('Illuminate\Foundation\Application');
         $this->app->shouldReceive('make')->with('NZTim\Logger\Handlers\FileHandler')->andReturn($this->fileHandler);
         $this->app->shouldReceive('make')->with('NZTim\Logger\Handlers\EmailHandler')->andReturn($this->emailHandler);
-        $this->app->shouldReceive('make')->with('NZTim\Logger\Handlers\PapertrailHandler')->andReturn($this->papertrailHandler);
         $this->request = Mockery::mock('Illuminate\Http\Request');
         $this->authManager = Mockery::mock('Illuminate\Auth\AuthManager');
         return new Logger($this->app, $this->request, $this->authManager);

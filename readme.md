@@ -69,24 +69,14 @@ LOGGER_EMAIL_LEVEL=ERROR
 LOGGER_EMAIL_TO=recipient@domain.com
 ```
 
-**Papertrail**
-
-Send log entries to Papertrail
-
-```
-LOGGER_PAPERTRAIL_LEVEL=DEBUG
-LOGGER_PAPERTRAIL_HOST=<xyz>.papertrailapp.com
-LOGGER_PAPERTRAIL_PORT=12345
-```
-This communication method may be blocked by default on shared hosting, test it when turning it on.
-
 ### Summary of .env entries:
 ```
 LOGGER_LOG=true
 LOGGER_APP_NAME=MyAppName
 LOGGER_EMAIL_LEVEL=ERROR
 LOGGER_EMAIL_TO=recipient@domain.com
-LOGGER_PAPERTRAIL_LEVEL=DEBUG
-LOGGER_PAPERTRAIL_HOST=<xyz>.papertrailapp.com
-LOGGER_PAPERTRAIL_PORT=12345
 ```
+### Changelog
+
+* v0.3: Remove Papertrail handler
+  * Upgrade: make sure Papertrail handler is not used

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use NZTim\Logger\Handlers\EmailHandler;
 use NZTim\Logger\Handlers\FileHandler;
 use NZTim\Logger\Handlers\Handler;
-use NZTim\Logger\Handlers\PapertrailHandler;
 use Throwable;
 
 class Logger
@@ -14,7 +13,6 @@ class Logger
     protected $handlers = [
         FileHandler::class,
         EmailHandler::class,
-        PapertrailHandler::class,
     ];
 
     protected $app;
