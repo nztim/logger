@@ -6,7 +6,8 @@ use Logger;
 use NZTim\Logger\Handlers\EmailHandler;
 use NZTim\Logger\Handlers\PapertrailHandler;
 
-class LoggerServiceProvider extends ServiceProvider {
+class LoggerServiceProvider extends ServiceProvider
+{
 
     protected $defer = false;
 

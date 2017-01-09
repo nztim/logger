@@ -11,18 +11,18 @@ class Entry
     protected $message;
     protected $context;
 
-    public function __construct($channel, $level, $message, $context = [])
+    public function __construct(string $channel, string $level, string $message, array $context = [])
     {
         $this->channel = substr(str_slug($channel), 0, 10);
-        if(strlen($this->channel) == 0) {
+        if (strlen($this->channel) == 0) {
             throw new InvalidArgumentException('Channel name must be set');
         }
-        $this->level = strtoupper($level);
-        if(!isset(MonologLogger::getLevels()[$this->level])) {
+        $this->level = trim(strtoupper($level));
+        if (!isset(MonologLogger::getLevels()[$this->level])) {
             throw new InvalidArgumentException('Level must be a standard Monolog level');
         }
         $this->code = MonologLogger::getLevels()[$this->level];
-        if(empty($message)) {
+        if (empty($message)) {
             throw new InvalidArgumentException('Log entry must contain a message');
         }
         $this->message = $message;

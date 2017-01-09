@@ -1,19 +1,22 @@
 <?php namespace NZTim\Logger;
 
-use App;
-use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
+use NZTim\Logger\Handlers\EmailHandler;
+use NZTim\Logger\Handlers\FileHandler;
 use NZTim\Logger\Handlers\Handler;
+use NZTim\Logger\Handlers\PapertrailHandler;
+use Throwable;
 
 class Logger
 {
     protected $handlers = [
-        'NZTim\Logger\Handlers\FileHandler',
-        'NZTim\Logger\Handlers\EmailHandler',
-        'NZTim\Logger\Handlers\PapertrailHandler',
+        FileHandler::class,
+        EmailHandler::class,
+        PapertrailHandler::class,
     ];
+
     protected $app;
     protected $request;
     protected $authManager;
@@ -28,60 +31,35 @@ class Logger
         $this->authManager = $authManager;
     }
 
-    /**
-     * @param string $channel
-     * @param string $message
-     * @param array $context
-     */
-    public function info($channel, $message, $context = [])
+    public function info(string $channel, string $message, array $context = [])
     {
         $this->add($channel, 'INFO', $message, $context);
     }
 
-    /**
-     * @param string $channel
-     * @param string $message
-     * @param array $context
-     */
-    public function warning($channel, $message, $context = [])
+    public function warning(string $channel, string $message, array $context = [])
     {
         $this->add($channel, 'WARNING', $message, $context);
     }
 
-    /**
-     * @param string $channel
-     * @param string $message
-     * @param array $context
-     */
-    public function error($channel, $message, $context = [])
+    public function error(string $channel, string $message, array $context = [])
     {
         $this->add($channel, 'ERROR', $message, $context);
     }
 
-    /**
-     * @param string $channel
-     * @param string $level
-     * @param string $message
-     * @param array $context
-     */
-    public function add($channel, $level, $message, $context = [])
+    public function add(string $channel, string $level, string $message, array $context = [])
     {
         $entry = new Entry($channel, $level, $message, $context);
         foreach ($this->handlers as $handlerName) {
-            $handler = $this->app->make($handlerName);
+            $handler = $this->app->make($handlerName); /** @var Handler $handler */
             try {
-                /** @var Handler $handler */
                 $handler->write($entry);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->writeExceptionMessage(get_class($handler), $e);
             }
         }
     }
 
-    /**
-     * @param string $handlerName
-     */
-    protected function writeExceptionMessage($handlerName, Exception $e)
+    protected function writeExceptionMessage(string $handlerName, Throwable $e)
     {
         $message = date('c')." Exception processing handler {$handlerName}: {$e->getMessage()}\n";
         $ds = DIRECTORY_SEPARATOR;
