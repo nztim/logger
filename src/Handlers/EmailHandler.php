@@ -33,6 +33,6 @@ class EmailHandler implements Handler
             return false;
         }
         $emailLevelCode = MonologLogger::getLevels()[$emailLevel];
-        return $entry->getCode() >= $emailLevelCode;
+        return $entry->code() >= $emailLevelCode;
     }
 }

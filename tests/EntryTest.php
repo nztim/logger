@@ -17,11 +17,11 @@ class EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Entry('test', 'INFO', 'Test message', ['abc' => 123]);
         $this->assertTrue($entry instanceof Entry);
-        $this->assertEquals('test', $entry->getChannel());
-        $this->assertEquals('INFO', $entry->getLevel());
-        $this->assertEquals(200, $entry->getCode());
-        $this->assertEquals('Test message', $entry->getMessage());
-        $this->assertEquals(['abc' => 123], $entry->getContext());
+        $this->assertEquals('test', $entry->channel());
+        $this->assertEquals('INFO', $entry->level());
+        $this->assertEquals(200, $entry->code());
+        $this->assertEquals('Test message', $entry->message());
+        $this->assertEquals(['abc' => 123], $entry->context());
     }
 
     /**

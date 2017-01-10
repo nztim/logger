@@ -8,9 +8,9 @@ class FileHandler implements Handler
 {
     public function write(Entry $entry)
     {
-        $log = new MonologLogger($entry->getChannel());
-        $log->pushHandler(new StreamHandler($this->getPath($entry->getChannel()), $entry->getCode()));
-        $log->addRecord($entry->getCode(), $entry->getMessage(), $entry->getContext());
+        $log = new MonologLogger($entry->channel());
+        $log->pushHandler(new StreamHandler($this->getPath($entry->channel()), $entry->code()));
+        $log->addRecord($entry->code(), $entry->message(), $entry->context());
     }
 
     protected function getPath(string $channel): string

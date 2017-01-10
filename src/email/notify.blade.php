@@ -240,10 +240,10 @@
                     <tr>
                         <td>
                             <h3>Log Notification</h3>
-                            <p class="lead">Error level: {{ $entry->getLevel() }}</p>
-                            <p>{{ $entry->getMessage() }}</p>
-                            @if(!empty($entry->getContext()))
-                                <p>{{ var_export($entry->getContext(), true) }}</p>
+                            <p class="lead">Error level: {{ $entry->level() }}</p>
+                            <p>{{ $entry->message() }}</p>
+                            @if(!empty($entry->context()))
+                                <p>{{ var_export($entry->context(), true) }}</p>
                             @endif
                             <p>Note: <strong>error emails are throttled</strong> - please check the logs</p>
                         </td>

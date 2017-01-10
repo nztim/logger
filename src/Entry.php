@@ -29,27 +29,27 @@ class Entry
         $this->context = $context;
     }
 
-    public function getChannel()
+    public function channel()
     {
         return $this->channel;
     }
 
-    public function getLevel()
+    public function level()
     {
         return $this->level;
     }
 
-    public function getCode()
+    public function code()
     {
         return $this->code;
     }
 
-    public function getMessage()
+    public function message()
     {
         return $this->message;
     }
 
-    public function getContext()
+    public function context()
     {
         return $this->context;
     }
