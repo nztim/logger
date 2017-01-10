@@ -1,6 +1,7 @@
 <?php namespace NZTim\Logger;
 
 use Illuminate\Support\Facades\Auth;
+use NZTim\Logger\Handlers\DatabaseHandler;
 use NZTim\Logger\Handlers\EmailHandler;
 use NZTim\Logger\Handlers\FileHandler;
 use NZTim\Logger\Handlers\Handler;
@@ -11,6 +12,7 @@ class Logger
     protected $handlers = [
         FileHandler::class,
         EmailHandler::class,
+        DatabaseHandler::class,
     ];
 
     public function info(string $channel, string $message, array $context = [])

@@ -2,21 +2,16 @@
 
 return [
 
-    // Capture Laravel log entries
-    'laravel' => true,
+    'laravel' => true, // Capture Laravel log entries
 
     'email' => [
-
-        // Sending of error emails
-        'send'      => false,
-
-        // Log level for which emails are sent
-        'level'     => 'ERROR',
-
-        //  Email recipient address
+        'send'      => false,       // Sending of error emails
+        'level'     => 'ERROR',     // Minimum log level for which emails are sent
         'recipient' => env('LOGGER_EMAIL_RECIPIENT', 'recipient@example.com'),
+        'name'      => 'MyApp',     // App name
+    ],
 
-        // App name
-        'name'      => 'MyApp',
+    'database' => [
+        'channels' => [],           // Channels to store in the db, use ['*'] for all channels
     ],
 ];

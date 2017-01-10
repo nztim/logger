@@ -60,7 +60,15 @@ public function report(Exception $e)
 Emails are only triggered if email sending is turned on, `app.debug` is false and the relevant error level meets the requirement. 
 The Laravel mail system must be configured for emails to function.   
 
+### Database handler
+
+* Add the table using `php artisan logger:migration` and `php artisan migrate`
+* Use the config file to set which channels should be logged to the database
+* You may now query the database using the Eloquent model `DbEntry`
+
 ### Changelog
 
+* v0.4: Add database handler.
+  * Upgrade: add new config file entries. To log entries to the database, add and run the migration, then update config file settings accordingly. 
 * v0.3: Remove Papertrail handler, use config file instead of .env, require PHP7.
   * Upgrade: publish and update the config file, make sure Papertrail handler is not required.
