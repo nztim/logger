@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Log;
+use NZTim\Logger\Commands\AddMigration;
 
 class LoggerServiceProvider extends ServiceProvider
 {
@@ -25,8 +26,7 @@ class LoggerServiceProvider extends ServiceProvider
         $this->app->bind('logger', function () {
             return $this->app->make(Logger::class);
         });
-        $this->mergeConfigFrom(
-            __DIR__.'/config/logger.php', 'logger'
-        );
+        $this->mergeConfigFrom(__DIR__.'/config/logger.php', 'logger');
+        $this->commands(AddMigration::class);
     }
 }
