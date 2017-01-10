@@ -7,13 +7,16 @@ return [
 
     'email' => [
 
-        // Log level for which emails are sent, false for no emails
+        // Sending of error emails
+        'send'      => false,
+
+        // Log level for which emails are sent
         'level'     => 'ERROR',
 
         //  Email recipient address
-        'recipient' => 'recipient@example.com',
+        'recipient' => env('LOGGER_EMAIL_RECIPIENT', 'recipient@example.com'),
 
         // App name
-        'name'       => 'MyApp',
+        'name'      => 'MyApp',
     ],
 ];

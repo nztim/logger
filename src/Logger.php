@@ -1,8 +1,6 @@
 <?php namespace NZTim\Logger;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use NZTim\Logger\Handlers\EmailHandler;
 use NZTim\Logger\Handlers\FileHandler;
 use NZTim\Logger\Handlers\Handler;
@@ -14,20 +12,6 @@ class Logger
         FileHandler::class,
         EmailHandler::class,
     ];
-
-    protected $app;
-    protected $request;
-    protected $authManager;
-
-    public function __construct(
-        Application $app,
-        Request $request,
-        AuthManager $authManager)
-    {
-        $this->app = $app;
-        $this->request = $request;
-        $this->authManager = $authManager;
-    }
 
     public function info(string $channel, string $message, array $context = [])
     {
@@ -48,7 +32,7 @@ class Logger
     {
         $entry = new Entry($channel, $level, $message, $context);
         foreach ($this->handlers as $handlerName) {
-            $handler = $this->app->make($handlerName); /** @var Handler $handler */
+            $handler = app($handlerName); /** @var Handler $handler */
             try {
                 $handler->write($entry);
             } catch (Throwable $e) {
@@ -65,16 +49,16 @@ class Logger
         file_put_contents($filename, $message, FILE_APPEND);
     }
 
-    public function requestInfo()
+    public function requestInfo(): array
     {
         $info = [];
-        $info['ip'] = $this->request->getClientIp();
-        $info['method'] = $this->request->server('REQUEST_METHOD');
-        $info['url'] = $this->request->url();
-        if($this->authManager->check()) {
-            $info['userid'] = $this->authManager->user()->id;
+        $info['ip'] = request()->getClientIp();
+        $info['method'] = request()->server('REQUEST_METHOD');
+        $info['url'] = request()->url();
+        if (Auth::check()) {
+            $info['userid'] = Auth::user()->id;
         }
-        $input = $this->request->all();
+        $input = request()->all();
         $remove = ['password', 'password_confirmation', '_token'];
         foreach ($remove as $item) {
             if (isset($input[$item])) {
