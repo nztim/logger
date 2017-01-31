@@ -13,8 +13,7 @@ class Entry
 
     public function __construct(string $channel, string $level, string $message, array $context = [])
     {
-        $channel = preg_replace('/\s+/', '', $channel); // Remove whitespace
-        $this->channel = substr($channel, 0, 10);
+        $this->channel = str_replace(' ', '', $channel);
         if (strlen($this->channel) == 0) {
             throw new InvalidArgumentException('Channel name must be set');
         }
