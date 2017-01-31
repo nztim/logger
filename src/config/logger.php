@@ -2,8 +2,13 @@
 
 return [
 
-    'laravel' => true, // Capture Laravel log entries
+    // Capture Laravel log entries
+    'laravel' => true,
 
+    // Base subfolder for custom logs, use '' for the storage/logs foler
+    'folder' => 'custom',
+
+    // Email notifications
     'email' => [
         'send'      => false,       // Sending of error emails
         'level'     => 'ERROR',     // Minimum log level for which emails are sent
@@ -12,6 +17,7 @@ return [
     ],
 
     'database' => [
-        'channels' => [],           // Channels to store in the db, use ['*'] for all channels
+        'channels' => [],           // Which channels should be stored in the db, use ['*'] for all channels
     ],
 ];
+

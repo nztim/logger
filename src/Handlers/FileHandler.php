@@ -16,10 +16,14 @@ class FileHandler implements Handler
     protected function getPath(string $channel): string
     {
         $ds = DIRECTORY_SEPARATOR;
-        $path = storage_path() . "{$ds}logs{$ds}custom";
-        if (!is_dir($path) && !file_exists($path)) {
-            mkdir($path, 0755);
+        $filename = 'logs' . $ds;
+        $filename .= config('logger.folder') ? config('logger.folder') . $ds : '';
+        $filename = str_replace('.', $ds, $filename . $channel) . '.log';
+        $filename = storage_path($filename);
+        $folder = pathinfo($filename)['dirname'];
+        if (!is_dir($folder) && !file_exists($folder)) {
+            mkdir($folder, 0755, true);
         }
-        return "{$path}{$ds}{$channel}.log";
+        return $filename;
     }
 }

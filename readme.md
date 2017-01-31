@@ -1,7 +1,7 @@
 #Logger
 
 Logger complements or replaces standard Laravel logging.
-It logs to local files and additionally handles email alerts and remote log aggregators.  
+It logs to local files and optionally provides email alerts.  
 
 ###Installation
 
@@ -16,18 +16,25 @@ Add facade reference:
 Publish the configuration file with: `php artisan vendor:publish --provider=NZTim\Logger\LoggerServiceProvider`.
 
 * `'laravel' => true,` captures Laravel log facade messages
+* `'folder' => 'custom'` sets the default subfolder for custom logs
 * `'email.send' => false` turns sending of error emails on/off
 * `'email.level' => 'ERROR'` sets the level at which email notifications are sent
 * `'email.recipient' => 'recipient@example.com',` sets the email recipient
 
 ### Usage
 
-Use the facade to write to custom log files. Files are stored in `storage/logs/custom`:
+Use the facade to write to custom log files. By default files are stored in `storage/logs/custom`:
 
 ```
 Logger::info('auth', 'User login from 1.2.3.4');
 Logger::warning('audit', 'A record was updated');
 Logger::error('exceptions', 'Fatal exception: ');  
+```
+
+If you wish to store a logfile in a subfolder, use dot notation:
+
+```
+Logger::info('audit.auth', 'User login from 1.2.3.4'); // Logs to `storage/logs/custom/audit/auth.log`
 ```
 
 A `requestInfo()` method is available to provide context for the message, including IP address, request type/URL, `Auth::user()->id` and input data
@@ -68,6 +75,7 @@ The Laravel mail system must be configured for emails to function.
 
 ### Changelog
 
+* v0.5: Enable configuration of base folder and dot notation for subfolders
 * v0.4: Add database handler.
   * Upgrade: add new config file entries. To log entries to the database, add and run the migration, then update config file settings accordingly. 
 * v0.3: Remove Papertrail handler, use config file instead of .env, require PHP7.
