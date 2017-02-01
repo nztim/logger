@@ -13,9 +13,9 @@ class Entry
 
     public function __construct(string $channel, string $level, string $message, array $context = [])
     {
-        $this->channel = str_replace(' ', '', $channel);
+        $this->channel = preg_replace("/[^a-zA-Z0-9\.]/", "", $channel); // Remove everything but a-z, A-Z and '.'
         if (strlen($this->channel) == 0) {
-            throw new InvalidArgumentException('Channel name must be set');
+            throw new InvalidArgumentException('Invalid channel name: ' . $channel);
         }
         $this->level = trim(strtoupper($level));
         if (!isset(MonologLogger::getLevels()[$this->level])) {
