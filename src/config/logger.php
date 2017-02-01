@@ -8,6 +8,12 @@ return [
     // Base subfolder for custom logs, use '' for the storage/logs foler
     'folder' => 'custom',
 
+    // Log file names that are to be handled as daily logs
+    'daily' => [],
+
+    // Maximum number of daily log files to keep
+    'max_daily' => 7,
+
     // Email notifications
     'email' => [
         'send'      => false,       // Sending of error emails

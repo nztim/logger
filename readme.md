@@ -17,6 +17,8 @@ Publish the configuration file with: `php artisan vendor:publish --provider=NZTi
 
 * `'laravel' => true,` captures Laravel log facade messages
 * `'folder' => 'custom'` sets the default subfolder for custom logs
+* `'daily' => []` list of log files to be handled as daily logs
+* `'max_daily' => 7` maximum number of daily log files to keep
 * `'email.send' => false` turns sending of error emails on/off
 * `'email.level' => 'ERROR'` sets the level at which email notifications are sent
 * `'email.recipient' => 'recipient@example.com',` sets the email recipient
@@ -75,6 +77,8 @@ The Laravel mail system must be configured for emails to function.
 
 ### Changelog
 
+* v0.6: Enable daily log files by configuration
+  * Upgrade: add new config file entries: `'daily' => [], 'max_daily' => 7,`
 * v0.5: Enable configuration of base folder and dot notation for subfolders
   * Upgrade: add new config file entry: `'folder' => 'custom',`
 * v0.4: Add database handler.
