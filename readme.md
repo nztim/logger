@@ -76,6 +76,7 @@ The Laravel mail system must be configured for emails to function.
 ### Changelog
 
 * v0.5: Enable configuration of base folder and dot notation for subfolders
+  * Upgrade: add new config file entry: `'folder' => 'custom',`
 * v0.4: Add database handler.
   * Upgrade: add new config file entries. To log entries to the database, add and run the migration, then update config file settings accordingly. 
 * v0.3: Remove Papertrail handler, use config file instead of .env, require PHP7.
