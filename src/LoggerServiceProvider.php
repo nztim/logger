@@ -15,7 +15,19 @@ class LoggerServiceProvider extends ServiceProvider
             __DIR__.'/config/logger.php' => config_path('logger.php'),
         ]);
         if (config('logger.laravel', false)) {
-            Log::listen(function ($level, $message, $context) {
+            Log::listen(function () {
+                $args = func_get_args();
+                if (count($args) === 1) {
+                    // Laravel 5.4 provides \Illuminate\Log\Events\MessageLogged object
+                    $level = $args[0]->level;
+                    $message = $args[0]->message;
+                    $context = $args[0]->context;
+                } else {
+                    // Laravel <=5.3 provides individual arguments
+                    $level = $args[0];
+                    $message = $args[1];
+                    $context = $args[2];
+                }
                 LoggerFacade::add('laravel', $level, $message, $context);
             });
         }
